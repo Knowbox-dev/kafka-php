@@ -651,10 +651,10 @@ class Process
                 foreach ($part['messages'] as $message) {
                     $this->messages[$topic['topicName']][$part['partition']][] = $message;
 
-                    $offset = $message['offset'];
+                    $offset = $offset > $message['offset'] ? $offset : $message['offset'];
                 }
 
-                $consumerOffset = ($part['highwaterMarkOffset'] > $offset) ? ($offset + 1) : $offset;
+                $consumerOffset = ($part['highwaterMarkOffset'] > $offset + 100) ? ($offset + 100) : $part['highwaterMarkOffset'];
                 $assign->setConsumerOffset($topic['topicName'], $part['partition'], $consumerOffset);
                 $assign->setCommitOffset($topic['topicName'], $part['partition'], $offset);
             }
